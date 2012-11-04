@@ -12,4 +12,4 @@ You need a few things to do to make it work though.
 
 After that you can read the /dev/chtest file. If you use "cat /dev/chtest" it will print indefinitely. You can also try "dd if=/dev/chtest of=output bs=13 count=1" and print the contents of output.
 
-Finally this distribution of code is licensed under GNU General Public License version 3. Fake ARP driver is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of it in a file named LICENSE, if not see (http://www.gnu.org/licenses/).
+Finally this distribution of code is licensed under GNU General Public License version 3. scully driver is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of it in a file named LICENSE, if not see (http://www.gnu.org/licenses/).
