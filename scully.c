@@ -1,10 +1,16 @@
 /*
- * main.c
+ * scully.c
+ * Copyright (C) 2012 Sinan Akpolat
  *
  * test char driver written while following ldd3
- *  Created on: Oct 3, 2012
- *      Author: sinan
- * Copyright (C) 2012 Sinan Akpolat
+ * This file is distributed under GNU GPLv3, see LICENSE file.
+ * If you haven't received a file named LICENSE see <http://www.gnu.org/licences>
+ *
+ * Fake ARP driver is distributed WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE
+ *
+ * This is a code written solely for training purposes,
+ * under any circumstances it should not be run on a production system.
  */
 
 #include <linux/init.h>
