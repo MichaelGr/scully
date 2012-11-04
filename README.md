@@ -1,4 +1,4 @@
-Hİ, this is a "Hello, world!" type driver code. 
+Hi, this is a "Hello, world!" type driver code. 
 
 It creates a char driver, which prints "Hello, world!" when read. It doesn't have write or seek functionality. 
 
