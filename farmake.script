@@ -1,0 +1,1 @@
+make -C kerneldir/ M="path to module src dir" modules

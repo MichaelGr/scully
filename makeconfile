@@ -1,0 +1,6 @@
+#create link to the device (ie driver) via /dev
+rm /dev/chtest
+mknod /dev/chtest c 100 0
+#mknod /dev/devname0 c #major #minor
+#then adjust perms and user/group info if necessary
+chmod a+w /dev/chtest
