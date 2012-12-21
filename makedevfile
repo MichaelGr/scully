@@ -1,0 +1,7 @@
+#remove device file if it already exists
+rm /dev/scully
+#create link to the char device via /dev filesystem
+mknod /dev/scully c 100 0
+#Usage: mknod /dev/devname0 c #major #minor
+#then adjust perms and user/group info if necessary
+chmod a+rw /dev/scully

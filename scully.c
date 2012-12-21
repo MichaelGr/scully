@@ -2,11 +2,11 @@
  * scully.c
  * Copyright (C) 2012 Sinan Akpolat
  *
- * test char driver written while following ldd3
+ * test char driver written while following LDD3
  * This file is distributed under GNU GPLv3, see LICENSE file.
  * If you haven't received a file named LICENSE see <http://www.gnu.org/licences>
  *
- * Fake ARP driver is distributed WITHOUT ANY WARRANTY;
+ * scully driver is distributed WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE
  *
  * This is a code written solely for training purposes,
@@ -32,14 +32,14 @@ static dev_t mydevnum;
 static struct cdev mydev;
 
 
-static int chtest_open(struct inode* inodeptr, struct file *fptr) {
+static int scully_open(struct inode* inodeptr, struct file *fptr) {
 	printk(KERN_ALERT "device file opened for the first time.");
 	printk(KERN_ALERT "but there's nothing I'm gonna do about it.");
 	//we don't have to know which device is opened, we don't need to do anything.
 	return 0;
 }
 
-static int chtest_release(struct inode* inodeptr, struct file *fptr) {
+static int scully_release(struct inode* inodeptr, struct file *fptr) {
 	//similarly close the file. We are sure there is no one reading or writing to it.
 	//So what? again we don't have to do anything.
 	printk(KERN_ALERT "device file is closed for good,");
@@ -47,8 +47,8 @@ static int chtest_release(struct inode* inodeptr, struct file *fptr) {
 	return 0;
 }
 
-static ssize_t chtest_read(struct file *fptr, char __user *uspptr, size_t count, loff_t* fpos) {
-	//it doesn't matter where you wanna read, I'll always give you the same string!!!
+static ssize_t scully_read(struct file *fptr, char __user *uspptr, size_t count, loff_t* fpos) {
+	//it doesn't matter what position you want to read, it will always give you the same string!!!
 	//I want to copy a string to userspace, so I use copy_to_user(*to pointer, *from pointer, ulong count)
 	//it's quite similar to memcpy
 	if(count>462) count = 462;
@@ -59,7 +59,7 @@ static ssize_t chtest_read(struct file *fptr, char __user *uspptr, size_t count,
 	else return count;
 }
 
-static ssize_t chtest_write(struct file *fptr, const char __user *uspptr, size_t count, loff_t* fpos) {
+static ssize_t scully_write(struct file *fptr, const char __user *uspptr, size_t count, loff_t* fpos) {
 	/*
 	 * We are not interested in writing right now. But let's make it seem like the device
 	 * writes the desired number of bytes everytime.
@@ -69,19 +69,22 @@ static ssize_t chtest_write(struct file *fptr, const char __user *uspptr, size_t
 
 static struct file_operations f_ops = {
 	.owner = THIS_MODULE,
-	.open = chtest_open,
-	.release = chtest_release,
-	.read = chtest_read,
-	.write = chtest_write
-	//I'll also add a llseek and ioctl handler function sometime
-}; //create fops struct with init values just like initializing an array
+	.open = scully_open,
+	.release = scully_release,
+	.read = scully_read,
+	.write = scully_write
+	//We don't have llseek and ioctl handler functions
+}; //create fops struct with initial values, just like initializing an array
 
-static int chtest_init(void) {
+static int scully_init(void) {
 	int error = 0;
 	//we should take major and minor numbers dynamically but I'll use static for sake of simplicity
-	dev_t mydevnum = MKDEV(100,0); //you can check for free major numbers on /proc/devices
-	register_chrdev_region(mydevnum, 1, "chtest");  //register the numbers
-	//we can also allocate mydev dynamically
+	dev_t mydevnum = MKDEV(100,0); //you can check for free major numbers on /proc/devices if (100,0) is  taken
+	error = register_chrdev_region(mydevnum, 1, "scully");  //register the numbers
+	if(error) {
+		printk(KERN_ALERT "Uanble to register device number (100, 0)");
+		return error;
+	}
 	cdev_init(&mydev, &f_ops);
 	mydev.owner = THIS_MODULE;
 	error = cdev_add(&mydev, mydevnum, 1);
@@ -90,16 +93,16 @@ static int chtest_init(void) {
 		unregister_chrdev_region(mydevnum, 1);
 		return error;
 	}
-	printk(KERN_ALERT "chtest module loaded!\n");
+	printk(KERN_ALERT "scully module loaded!\n");
 	return 0;
 }
 
-static void chtest_exit(void) {
+static void scully_exit(void) {
 
 	cdev_del(&mydev); //take the device out of the system
 	unregister_chrdev_region(mydevnum, 1); //unregister our dev numbers
-	printk(KERN_ALERT "chtest module unloaded...\n");
+	printk(KERN_ALERT "scully module unloaded...\n");
 }
 
-module_init(chtest_init);
-module_exit(chtest_exit);
+module_init(scully_init);
+module_exit(scully_exit);
